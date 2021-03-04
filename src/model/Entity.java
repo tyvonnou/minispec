@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Entity {
@@ -9,6 +10,7 @@ public class Entity {
 	
 	public Entity(String name) {
 		this.name = name;
+		this.attributes = new ArrayList<>();
 	}
 
 	public void addAttribute(Attribute attribute) {

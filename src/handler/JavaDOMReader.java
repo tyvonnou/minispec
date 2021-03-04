@@ -31,7 +31,7 @@ public class JavaDOMReader {
 	private Entity entity;
 	private Attribute attribute;
 
-	public void Read(String xmlFile) throws SAXException, IOException, ParserConfigurationException {
+	public void read(String xmlFile) throws SAXException, IOException, ParserConfigurationException {
 		 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		 DocumentBuilder builder;
 		 builder = factory.newDocumentBuilder();
@@ -40,6 +40,8 @@ public class JavaDOMReader {
 		 Element root = document.getDocumentElement();
 		 if (root != null) {
 			 model = new Model();
+			 Element EmodelNode = (Element) document.getElementsByTagName("model").item(0);
+			 this.model.setName(EmodelNode.getAttribute("name"));
 			 NodeList nListEntity = document.getElementsByTagName("entity");
 			 for (int temp = 0; temp < nListEntity.getLength(); temp++)
 			 {
@@ -64,7 +66,7 @@ public class JavaDOMReader {
 		 }
 	} 
 	
-	public void Write(String xmlOutputFilename, Model model) {
+	public void writeXML(String xmlOutputFilename, Model model) {
         try {
         	 
             DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
