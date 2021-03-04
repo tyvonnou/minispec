@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT model (entity*)>
+<!ATTLIST model name CDATA #REQUIRED>
+<!ELEMENT entity (attribute*)>
+<!ATTLIST entity name CDATA #REQUIRED>
+<!ELEMENT attribute EMPTY>
+<!ATTLIST attribute name CDATA #REQUIRED>
+<!ATTLIST attribute type CDATA #REQUIRED>
