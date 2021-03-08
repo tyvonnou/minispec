@@ -56,7 +56,7 @@ class JavaDOMTest {
 		dom.read("dtd/Satellite.xml");
 		
 		Model model = dom.getModel();
-        assertTrue(model.getName().equals("Projet"));
+        assertTrue(model.getName().equals("projet"));
         assertTrue(model.getEntity(0).getName().equals("Satellite"));
         assertTrue(model.getEntity(0).getAttribute(0).getName().equals("name"));
         assertTrue(model.getEntity(0).getAttribute(0).getType().equals("String"));
@@ -66,13 +66,13 @@ class JavaDOMTest {
         // WRITE
         String filename = "dtd/OUTPUTDOMTEST.xml";
         dom.writeXML(filename, model);
-        
+        dom.writeJAVA(model);
     	try (FileInputStream fis = new FileInputStream(filename)) {
 			byte[] buf = new byte[10240];
 			int size = fis.read(buf);
 			String test = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n"
 					+ "<!DOCTYPE model PUBLIC \"model\" \"model.dtd\">\r\n"
-					+ "<model name=\"Projet\">\r\n"
+					+ "<model name=\"projet\">\r\n"
 					+ "    <entity name=\"Satellite\">\r\n"
 					+ "        <attribute name=\"name\" type=\"String\"/>\r\n"
 					+ "        <attribute name=\"id\" type=\"Integer\"/>\r\n"

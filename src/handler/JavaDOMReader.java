@@ -8,7 +8,12 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -30,6 +35,14 @@ public class JavaDOMReader {
 	private Model model;
 	private Entity entity;
 	private Attribute attribute;
+	
+	public static String capitalize(String str) {
+	    if(str == null || str.isEmpty()) {
+	        return str;
+	    }
+
+	    return str.substring(0, 1).toUpperCase() + str.substring(1);
+	}
 
 	public void read(String xmlFile) throws SAXException, IOException, ParserConfigurationException {
 		 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -66,6 +79,9 @@ public class JavaDOMReader {
 		 }
 	} 
 	
+	/*
+	 * Transform a model into an XML file.
+	 */
 	public void writeXML(String xmlOutputFilename, Model model) {
         try {
         	 
@@ -128,6 +144,81 @@ public class JavaDOMReader {
         } catch (TransformerException tfe) {
             tfe.printStackTrace();
         }
+	}
+
+	/*
+	 * Generate model into java source files.
+	 */
+	public void writeJAVA(Model model) {
+		String generatedPath = "src/gerenated/" + model.getName() + "/";
+		try {
+			// Create the pakage
+			File generatedPackagePath = new File(generatedPath);
+			if (!generatedPackagePath.exists()){
+				generatedPackagePath.mkdirs();
+			} else {
+				generatedPackagePath.delete();
+				generatedPackagePath.mkdirs();
+			}
+			// Foreach entities
+			for(int i=0; i<model.getEntitiesSize(); i++) {
+				String filePath = generatedPath += model.getEntity(i).getName() + ".java";
+				// Create the java file 
+				File file = new File(filePath);
+				if(file.exists()) file.delete();
+				if(file.createNewFile()) {
+					// Create the file content
+					// Adding title
+					StringBuilder fileContent = new StringBuilder("package gerenated."
+												+ model.getName()
+												+";\r\n\r\npublic class " 
+												+ model.getEntity(i).getName() 
+												+ " {\r\n");
+					// Adding attributes
+					for(int j=0; j<model.getEntity(i).getAttributeSize(); j++) {
+						fileContent.append( "\t" 
+									+ model.getEntity(i).getAttribute(j).getType() 
+									+ " " 
+									+ model.getEntity(i).getAttribute(j).getName() 
+									+";\r\n");
+					}
+					// Adding constructor
+					fileContent.append("\tpublic "
+								+ model.getEntity(i).getName()
+								+ "() {}\r\n");
+					// Adding setters and getters 
+					for(int j=0; j<model.getEntity(i).getAttributeSize(); j++) {
+						fileContent.append( "\tpublic "
+								+ model.getEntity(i).getAttribute(j).getType()
+								+ " get"
+								+ capitalize(model.getEntity(i).getAttribute(j).getName()) 
+								+ "() {\r\n\t\treturn this."
+								+ model.getEntity(i).getAttribute(j).getName()
+								+ ";\r\n\t}\r\n\tpublic void set"
+								+ capitalize(model.getEntity(i).getAttribute(j).getName()) 
+								+ "("
+								+ model.getEntity(i).getAttribute(j).getType()
+								+ " "
+								+ model.getEntity(i).getAttribute(j).getName()
+								+ ") {\r\n\t\tthis."
+								+ model.getEntity(i).getAttribute(j).getName()
+								+ " = "
+								+ model.getEntity(i).getAttribute(j).getName()
+								+ ";\r\n\t}\r");			
+					}
+					fileContent.append("}");
+				
+					
+					FileOutputStream fos = null;
+			    
+					fos = new FileOutputStream(filePath);
+					fos.write(fileContent.toString().getBytes());
+					fos.close();
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Model getModel(){
