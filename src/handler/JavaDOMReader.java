@@ -10,9 +10,6 @@ import org.w3c.dom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -36,14 +33,19 @@ public class JavaDOMReader {
 	private Entity entity;
 	private Attribute attribute;
 	
+	/*
+	 * Add a capital letter at the beginning of the string.
+	 */
 	public static String capitalize(String str) {
 	    if(str == null || str.isEmpty()) {
 	        return str;
 	    }
-
 	    return str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
 
+	/*
+	 * Xml file to object 
+	 */
 	public void read(String xmlFile) throws SAXException, IOException, ParserConfigurationException {
 		 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		 DocumentBuilder builder;
@@ -80,7 +82,7 @@ public class JavaDOMReader {
 	} 
 	
 	/*
-	 * Transform a model into an XML file.
+	 * Transform a model object into an XML file.
 	 */
 	public void writeXML(String xmlOutputFilename, Model model) {
         try {
@@ -147,10 +149,10 @@ public class JavaDOMReader {
 	}
 
 	/*
-	 * Generate model into java source files.
+	 * Generate model object into java source files.
 	 */
 	public void writeJAVA(Model model) {
-		String generatedPath = "src/gerenated/" + model.getName() + "/";
+		String generatedPath = "src/generated/" + model.getName() + "/";
 		try {
 			// Create the pakage
 			File generatedPackagePath = new File(generatedPath);
@@ -169,11 +171,11 @@ public class JavaDOMReader {
 				if(file.createNewFile()) {
 					// Create the file content
 					// Adding title
-					StringBuilder fileContent = new StringBuilder("package gerenated."
+					StringBuilder fileContent = new StringBuilder("package generated."
 												+ model.getName()
 												+";\r\n\r\npublic class " 
 												+ model.getEntity(i).getName() 
-												+ " {\r\n");
+												+ " {\r\n\r\n");
 					// Adding attributes
 					for(int j=0; j<model.getEntity(i).getAttributeSize(); j++) {
 						fileContent.append( "\t" 
@@ -183,18 +185,18 @@ public class JavaDOMReader {
 									+";\r\n");
 					}
 					// Adding constructor
-					fileContent.append("\tpublic "
+					fileContent.append("\r\n\tpublic "
 								+ model.getEntity(i).getName()
 								+ "() {}\r\n");
 					// Adding setters and getters 
 					for(int j=0; j<model.getEntity(i).getAttributeSize(); j++) {
-						fileContent.append( "\tpublic "
+						fileContent.append( "\r\n\tpublic "
 								+ model.getEntity(i).getAttribute(j).getType()
 								+ " get"
 								+ capitalize(model.getEntity(i).getAttribute(j).getName()) 
 								+ "() {\r\n\t\treturn this."
 								+ model.getEntity(i).getAttribute(j).getName()
-								+ ";\r\n\t}\r\n\tpublic void set"
+								+ ";\r\n\t}\r\n\r\n\tpublic void set"
 								+ capitalize(model.getEntity(i).getAttribute(j).getName()) 
 								+ "("
 								+ model.getEntity(i).getAttribute(j).getType()
@@ -204,13 +206,10 @@ public class JavaDOMReader {
 								+ model.getEntity(i).getAttribute(j).getName()
 								+ " = "
 								+ model.getEntity(i).getAttribute(j).getName()
-								+ ";\r\n\t}\r");			
+								+ ";\r\n\t}\r\n");			
 					}
 					fileContent.append("}");
-				
-					
 					FileOutputStream fos = null;
-			    
 					fos = new FileOutputStream(filePath);
 					fos.write(fileContent.toString().getBytes());
 					fos.close();

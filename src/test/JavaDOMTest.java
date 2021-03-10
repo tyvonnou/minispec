@@ -21,6 +21,9 @@ import model.Model;
 
 class JavaDOMTest {
 	
+	/*
+	 * Find the differences between two string
+	 */
 	public static List<String> findNotMatching(String sourceStr, String anotherStr){
 	    StringTokenizer at = new StringTokenizer(sourceStr, " ");
 	    StringTokenizer bt = null;
@@ -49,6 +52,9 @@ class JavaDOMTest {
 	    return missingWords;
 	}
 
+	/*
+	 * Transform XML file to objects and export the objects in XML file
+	 */
 	@Test
 	void testXMLtoXML() throws SAXException, IOException, ParserConfigurationException {
 		// READ
@@ -91,6 +97,52 @@ class JavaDOMTest {
 		}
 	}
 	
-	
+	/*
+	 * Transform XML file to object and export objects in java sources files
+	 */
+	@Test
+	void testXMLtoJava() throws SAXException, IOException, ParserConfigurationException {
+		// READ
+		JavaDOMReader dom = new JavaDOMReader();
+		dom.read("dtd/Satellite.xml");
+		
+		Model model = dom.getModel();
+        assertTrue(model.getName().equals("projet"));
+        assertTrue(model.getEntity(0).getName().equals("Satellite"));
+        assertTrue(model.getEntity(0).getAttribute(0).getName().equals("name"));
+        assertTrue(model.getEntity(0).getAttribute(0).getType().equals("String"));
+        assertTrue(model.getEntity(0).getAttribute(1).getName().equals("id"));
+        assertTrue(model.getEntity(0).getAttribute(1).getType().equals("Integer"));
 
+        // WRITE
+        String filename = "src/generated/projet/Satellite.java";
+        dom.writeJAVA(model);
+    	try (FileInputStream fis = new FileInputStream(filename)) {
+			byte[] buf = new byte[10240];
+			int size = fis.read(buf);
+			String test = "package generated.projet;\r\n\r\n"
+					+ "public class Satellite {\r\n\r\n"
+					// Attributes
+					+ "\tString name;\r\n"
+					+ "\tInteger id;\r\n\r\n"
+					// Constructor
+					+ "\tpublic Satellite() {}\r\n\r\n"
+					// Getters and Setters
+					+ "\tpublic String getName() {\r\n\t\treturn this.name;\r\n\t}\r\n\r\n"
+					+ "\tpublic void setName(String name) {\r\n\t\tthis.name = name;\r\n\t}\r\n\r\n"
+					+ "\tpublic Integer getId() {\r\n\t\treturn this.id;\r\n\t}\r\n\r\n"
+					+ "\tpublic void setId(Integer id) {\r\n\t\tthis.id = id;\r\n\t}\r\n"
+					+ "}";
+			String contents = new String(buf,0,size);
+//			If you have some trouble with the test,
+//			you can compare the test string and the output string thanks to the findNotMatching function
+//			List<String> diff = findNotMatching(contents, test);
+//			System.out.println(diff.get(0));
+			assertTrue(contents.equals(test));
+		} catch (FileNotFoundException e) {
+			fail("");
+		} catch (IOException e) {
+			fail("");
+		}
+	}
 }
