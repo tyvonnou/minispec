@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE model PUBLIC "model" "model.dtd">
+<model name="projet">
+	<entity name="Satellite">
+		<attribute name="name" type="String"/>
+		<attribute name="id" type="Integer"/>
+		<attribute name="parent" type="Flotte"/>
+	</entity>
+	<entity name="Flotte">
+	</entity>
+</model>

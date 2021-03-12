@@ -35,9 +35,7 @@ public class Visitor implements IVisitor
 			generatedPackagePath.mkdirs();
 		}
 		this.model = model;
-		// Create the source code package line
-		this.javaSource.append("package generatedVisitor." + model.getName() + ";\r\n\r\n");
-		// Then, generate all entities
+		// Generate all entities
 		for (int i=0; i<model.getEntitiesSize(); i++){
 			model.getEntity(i).accept(this);
 		}		
@@ -45,7 +43,9 @@ public class Visitor implements IVisitor
 
 	@Override
 	public void visitEntity(Entity entity) {
-		String filePath = this.generatedPath += entity.getName() + ".java";
+		// Create the source code package line
+		this.javaSource.append("package generatedVisitor." + this.model.getName() + ";\r\n\r\n");
+		String filePath = this.generatedPath + entity.getName() + ".java";
 		// Create the java file 
 		File file = new File(filePath);
 		if(file.exists()) file.delete();
@@ -58,9 +58,12 @@ public class Visitor implements IVisitor
 				
 				for (int i=0; i<entity.getAttributeSize(); i++) {
 					entity.getAttribute(i).accept(this);
+					if (i == entity.getAttributeSize()-1) {
+						this.javaSource.append("\r\n");
+					}
 				}
 				// Generate constructor
-				this.javaSource.append("\r\n\tpublic "
+				this.javaSource.append("\tpublic "
 						+ entity.getName()
 						+ "() {}\r\n");
 				// Generate Getters and Setters
@@ -77,6 +80,7 @@ public class Visitor implements IVisitor
 			fos = new FileOutputStream(filePath);
 			fos.write(this.javaSource.toString().getBytes());
 			fos.close();
+			this.javaSource.delete(0, this.javaSource.length());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

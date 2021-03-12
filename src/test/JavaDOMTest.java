@@ -153,7 +153,7 @@ class JavaDOMTest {
 	void testVisitorXMLtoJava() throws SAXException, IOException, ParserConfigurationException {
 		// READ
 		JavaDOMReader dom = new JavaDOMReader();
-		dom.read("dtd/Satellite.xml");
+		dom.read("dtd/SatelliteVisitor.xml");
 		
 		Model model = dom.getModel();
         assertTrue(model.getName().equals("projet"));
