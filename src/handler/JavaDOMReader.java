@@ -56,18 +56,25 @@ public class JavaDOMReader {
 		 document.getDocumentElement().normalize();
 		 Element root = document.getDocumentElement();
 		 if (root != null) {
+			 // Init model
 			 model = new Model();
+			 // Get the model element
 			 Element EmodelNode = (Element) document.getElementsByTagName("model").item(0);
 			 this.model.setName(EmodelNode.getAttribute("name"));
+			 // Get the list of entities 
 			 NodeList nListEntity = document.getElementsByTagName("entity");
+			 // For each entity
 			 for (int temp = 0; temp < nListEntity.getLength(); temp++)
 			 {
 			  Node nodeEntity = nListEntity.item(temp);
 			  if (nodeEntity.getNodeType() == Node.ELEMENT_NODE)
 			  {
+				 // Get the entity
 				 Element eElementEntity = (Element) nodeEntity;
 				 this.entity = new Entity(eElementEntity.getAttribute("name"));
-				 NodeList nListAttr = document.getElementsByTagName("attribute");
+				 // Get the list of attributes 
+				 NodeList nListAttr = eElementEntity.getElementsByTagName("attribute");
+				 // For each attribute
 				 for (int temp2 = 0; temp2 < nListAttr.getLength(); temp2++) {
 					  Node nodeAttr = nListAttr.item(temp2);
 					  if (nodeAttr.getNodeType() == Node.ELEMENT_NODE)
@@ -210,6 +217,7 @@ public class JavaDOMReader {
 								+ model.getEntity(i).getAttribute(j).getName()
 								+ ";\r\n\t}\r\n");			
 					}
+					// Write the class file 
 					fileContent.append("}");
 					FileOutputStream fos = null;
 					fos = new FileOutputStream(filePath);
@@ -230,6 +238,9 @@ public class JavaDOMReader {
 	    model.accept(visitor);
 	}
 	
+	/*
+	 * Return the model
+	 */
 	public Model getModel(){
 	      return model;
 	}
