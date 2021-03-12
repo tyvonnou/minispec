@@ -4,8 +4,11 @@
 	<entity name="Satellite">
 		<attribute name="name" type="String"/>
 		<attribute name="id" type="Integer"/>
-		<attribute name="parent" type="Flotte"/>
+		<collection name="PanneauxSolaires" max="2" min="0" type="PanneauSolaire" typeCollection="Set" />
+		<collection name="Balises" type="Flotte" max="10" min="1" typeCollection="List" />
 	</entity>
 	<entity name="Flotte">
+	</entity>
+	<entity name="PanneauSolaire">
 	</entity>
 </model>

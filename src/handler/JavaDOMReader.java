@@ -28,12 +28,14 @@ import visitor.IVisitor;
 import visitor.Visitor;
 import model.Entity;
 import model.Attribute;
+import model.Collection;
 
 public class JavaDOMReader {
 	
 	private Model model;
 	private Entity entity;
 	private Attribute attribute;
+	private Collection collection;
 	
 	/*
 	 * Add a capital letter at the beginning of the string.
@@ -82,6 +84,18 @@ public class JavaDOMReader {
 							 Element eElementAttr = (Element) nodeAttr;
 							 this.attribute =  new Attribute(eElementAttr.getAttribute("name"), eElementAttr.getAttribute("type"));
 					         this.entity.addAttribute(this.attribute);
+					  }				    
+				 }
+				// Get the list of collections 
+				 NodeList nListColl = eElementEntity.getElementsByTagName("collection");
+				 // For each attribute
+				 for (int temp2 = 0; temp2 < nListColl.getLength(); temp2++) {
+					  Node nodeColl = nListColl.item(temp2);
+					  if (nodeColl.getNodeType() == Node.ELEMENT_NODE)
+					  {
+							 Element eElementColl = (Element) nodeColl;
+							 this.collection =  new Collection(eElementColl.getAttribute("name"), eElementColl.getAttribute("type"), eElementColl.getAttribute("typeCollection"));
+					         this.entity.addCollection(this.collection);
 					  }				    
 				 }
 		         this.model.addEntity(this.entity);

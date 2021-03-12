@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!ELEMENT model (entity*)>
 <!ATTLIST model name CDATA #REQUIRED>
-<!ELEMENT entity (attribute*)>
+<!ELEMENT entity (attribute*, collection*)>
 <!ATTLIST entity name CDATA #REQUIRED>
 <!ELEMENT attribute EMPTY>
 <!ATTLIST attribute name CDATA #REQUIRED>
 <!ATTLIST attribute type CDATA #REQUIRED>
+<!ELEMENT collection EMPTY>
+<!ATTLIST collection name CDATA #REQUIRED>
+<!ATTLIST collection type CDATA #REQUIRED>
+<!ATTLIST collection typeCollection CDATA #REQUIRED>
+<!ATTLIST collection min CDATA #REQUIRED>
+<!ATTLIST collection max CDATA #REQUIRED>
