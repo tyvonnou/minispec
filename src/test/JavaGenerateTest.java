@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 import handler.JavaDOMReader;
 import model.Model;
 
-class JavaDOMTest {
+class JavaGenerateTest {
 	
 	/*
 	 * Find the differences between two string
