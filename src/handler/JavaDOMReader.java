@@ -24,6 +24,8 @@ import org.w3c.dom.DOMImplementation;
 import org.xml.sax.SAXException;
 
 import model.Model;
+import visitor.IVisitor;
+import visitor.Visitor;
 import model.Entity;
 import model.Attribute;
 
@@ -218,6 +220,14 @@ public class JavaDOMReader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/*
+	 * Generate model object into java source files using visitor.
+	 */
+	public void writeVisitorJAVA(Model model) {
+	    IVisitor visitor = new Visitor();
+	    model.accept(visitor);
 	}
 	
 	public Model getModel(){

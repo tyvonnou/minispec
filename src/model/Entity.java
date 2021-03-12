@@ -1,9 +1,13 @@
 package model;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Entity {
+import visitor.IVisitable;
+import visitor.IVisitor;
+
+public class Entity implements IVisitable {
 	
 	String name ;
 	List<Attribute> attributes ;
@@ -29,4 +33,7 @@ public class Entity {
 		return this.attributes.get(index);
 	}
 	
+	public void accept(IVisitor visitor) {
+		visitor.visitEntity(this);
+	}
 }

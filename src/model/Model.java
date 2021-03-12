@@ -3,8 +3,11 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import visitor.IVisitable;
+import visitor.IVisitor;
 
-public class Model {
+
+public class Model implements IVisitable {
 	
 	String name;
 	List<Entity> entities;
@@ -31,6 +34,9 @@ public class Model {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	public void accept(IVisitor visitor) {
+		  visitor.visitModel(this);
 	}
 
 }

@@ -1,6 +1,9 @@
 package model;
 
-public class Attribute {
+import visitor.IVisitable;
+import visitor.IVisitor;
+
+public class Attribute implements IVisitable {
 	
 	String name;
 	String type;
@@ -18,5 +21,7 @@ public class Attribute {
 		return this.type;
 	}
 
-
+	 public void accept(IVisitor visitor) {
+		  visitor.visitAttribute(this);
+	 }
 }
